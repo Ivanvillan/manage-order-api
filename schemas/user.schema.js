@@ -19,7 +19,7 @@ const createUserSchema = Joi.object({
     phone: phone.required(),
     email: email.required(),
     password: password.required()
-});
+}); 
 
 module.exports = {
     readUserSchema,

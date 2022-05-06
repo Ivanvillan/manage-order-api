@@ -3,9 +3,22 @@ const { config } = require('./config/config');
 const { boomErrorHandler } = require('./middlewares/error.handler');
 const apiRouter = require('./routes');
 const passport = require('passport');
+const cors = require('cors');
 
 const app = express();
 const port = config.port;
+
+const whitelist = ['http://localhost:4200', 'https://myapp.co'];
+const options = {
+  origin: (origin, callback) => {
+    if (whitelist.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('no permitido'));
+    }
+  }
+}
+app.use(cors(options));
 
 require('./utils/');
 

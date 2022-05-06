@@ -1,7 +1,7 @@
 const boom = require('@hapi/boom');
 
 //funcion para comprobar los roles autorizados en la ruta
-function checkRoles(...roles) {
+function rolesChek(...roles) {
     return (req, res, next) => {
         // se requiere la información del token
         const user = req.user
@@ -15,5 +15,5 @@ function checkRoles(...roles) {
 }
 
 module.exports = {
-    checkRoles
+    rolesChek
 }
