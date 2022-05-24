@@ -34,7 +34,6 @@ router.get('/:idcategorie',
         } catch (error) {
             next(error);
         }
-
     }
 );
 
@@ -49,7 +48,8 @@ router.get('/state/:enabled',
         } catch (error) {
             next(error)
         }
-    });
+    }
+);
 
 router.post('/denomination/',
     passport.authenticate('jwt', { session: false }),
@@ -62,7 +62,8 @@ router.post('/denomination/',
         } catch (error) {
             next(error)
         }
-    });
+    }
+);
 
 router.post('/',
     passport.authenticate('jwt', { session: false }),

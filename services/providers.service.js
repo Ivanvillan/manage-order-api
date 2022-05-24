@@ -1,12 +1,12 @@
 const db = require('./../lib/database');
 const boom = require('@hapi/boom');
 
-class CategoriesService {
+class ProvidersService {
 
     constructor() { }
 
     async read() {
-        const query = 'SELECT * FROM categories';
+        const query = 'SELECT * FROM providers';
         return new Promise((resolve, reject) => {
             db.query(query, (err, row) => {
                 if (!err) {
@@ -19,7 +19,7 @@ class CategoriesService {
     }
 
     async readByID(id) { 
-        const query = 'SELECT * FROM categories WHERE idcategorie = ?';
+        const query = 'SELECT * FROM providers WHERE idprovider = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [id], (err, row) => {
                 if (!err) {
@@ -32,7 +32,7 @@ class CategoriesService {
     }
 
     readByState(state) {
-        const query = 'SELECT * FROM categories WHERE enabled = ?'
+        const query = 'SELECT * FROM providers WHERE enabled = ?'
         return new Promise((resolve, reject) => {
             db.query(query, [state], (err, row) => {
                 if (!err) {
@@ -44,26 +44,16 @@ class CategoriesService {
         });
     }
 
-    readByDenomination(data) {
-        const query = 'SELECT * FROM categories WHERE denomination LIKE ?'
-        return new Promise((resolve, reject) => {
-            db.query(query, ['%' + data.denomination + '%'], (err, row) => {
-                if (!err) {
-                    resolve(row);
-                } else {
-                    reject(boom.badRequest(err.sqlMessage));
-                }
-            });
-        });
-    }
-
     async create(data) { 
-        const query = 'INSERT INTO categories (denomination) VALUES (?)';
-        const denomination = data.denomination;
+        const query = 'INSERT INTO providers (business_name, phone, email, additional_information) VALUES (?, ?, ?, ?)';
+        const business_name = data.business_name;
+        const phone = data.phone;
+        const email = data.email;
+        const additional_information = data.additional_information;
         return new Promise((resolve, reject) => {
-            db.query(query, [denomination], (err, result, row) => {
+            db.query(query, [business_name, phone, email, additional_information], (err, result, row) => {
                 if (!err) {
-                    resolve(`categorie id ${result.insertId}`);
+                    resolve(`provider id ${result.insertId}`);
                 } else {
                     reject(boom.badRequest(err.sqlMessage));
                 }
@@ -76,7 +66,7 @@ class CategoriesService {
             updates.created = updates.created.split('.')[0];
         }
         updates.updated = new Date();
-        const query = 'UPDATE categories SET ? WHERE idcategorie = ?';
+        const query = 'UPDATE providers SET ? WHERE idprovider = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [updates, id], (err, row) => {
                 if (!err) {
@@ -89,7 +79,7 @@ class CategoriesService {
     }
 
     async delete(id) { 
-        const query = 'DELETE FROM categories WHERE idcategorie = ?';
+        const query = 'DELETE FROM providers WHERE idprovider = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [id], (err, row, fields) => {
                 if (!err) {
@@ -103,4 +93,4 @@ class CategoriesService {
 
 }
 
-module.exports = CategoriesService;
+module.exports = ProvidersService;

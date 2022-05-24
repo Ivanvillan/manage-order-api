@@ -1,12 +1,11 @@
 const db = require('./../lib/database');
 const boom = require('@hapi/boom');
 
-class CategoriesService {
-
+class ProductsService {
     constructor() { }
 
     async read() {
-        const query = 'SELECT * FROM categories';
+        const query = 'SELECT * FROM products';
         return new Promise((resolve, reject) => {
             db.query(query, (err, row) => {
                 if (!err) {
@@ -19,7 +18,7 @@ class CategoriesService {
     }
 
     async readByID(id) { 
-        const query = 'SELECT * FROM categories WHERE idcategorie = ?';
+        const query = 'SELECT * FROM products WHERE idproduct = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [id], (err, row) => {
                 if (!err) {
@@ -31,8 +30,8 @@ class CategoriesService {
         });
     }
 
-    readByState(state) {
-        const query = 'SELECT * FROM categories WHERE enabled = ?'
+    async readByState(state) { 
+        const query = 'SELECT * FROM products WHERE enabled = ?'
         return new Promise((resolve, reject) => {
             db.query(query, [state], (err, row) => {
                 if (!err) {
@@ -44,26 +43,16 @@ class CategoriesService {
         });
     }
 
-    readByDenomination(data) {
-        const query = 'SELECT * FROM categories WHERE denomination LIKE ?'
-        return new Promise((resolve, reject) => {
-            db.query(query, ['%' + data.denomination + '%'], (err, row) => {
-                if (!err) {
-                    resolve(row);
-                } else {
-                    reject(boom.badRequest(err.sqlMessage));
-                }
-            });
-        });
-    }
-
     async create(data) { 
-        const query = 'INSERT INTO categories (denomination) VALUES (?)';
-        const denomination = data.denomination;
+        const query = 'INSERT INTO products (idcategorie, description, stock, last_updated) VALUES (?, ?, ?, ?)';
+        const idcategorie = data.idcategorie;
+        const description = data.description;
+        const stock = data.stock;
+        const last_updated = new Date();
         return new Promise((resolve, reject) => {
-            db.query(query, [denomination], (err, result, row) => {
+            db.query(query, [idcategorie, description, stock, last_updated], (err, result, row) => {
                 if (!err) {
-                    resolve(`categorie id ${result.insertId}`);
+                    resolve(`product id ${result.insertId}`);
                 } else {
                     reject(boom.badRequest(err.sqlMessage));
                 }
@@ -75,8 +64,8 @@ class CategoriesService {
         if(updates.created) {
             updates.created = updates.created.split('.')[0];
         }
-        updates.updated = new Date();
-        const query = 'UPDATE categories SET ? WHERE idcategorie = ?';
+        updates.last_updated = new Date();
+        const query = 'UPDATE products SET ? WHERE idproduct = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [updates, id], (err, row) => {
                 if (!err) {
@@ -89,7 +78,7 @@ class CategoriesService {
     }
 
     async delete(id) { 
-        const query = 'DELETE FROM categories WHERE idcategorie = ?';
+        const query = 'DELETE FROM products WHERE idproduct = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [id], (err, row, fields) => {
                 if (!err) {
@@ -100,7 +89,6 @@ class CategoriesService {
             });
         });
     }
-
 }
 
-module.exports = CategoriesService;
+module.exports = ProductsService;

@@ -1,12 +1,11 @@
 const db = require('./../lib/database');
 const boom = require('@hapi/boom');
 
-class CategoriesService {
-
-    constructor() { }
+class AreasService {
+    constructor() {}
 
     async read() {
-        const query = 'SELECT * FROM categories';
+        const query = 'SELECT * FROM areas';
         return new Promise((resolve, reject) => {
             db.query(query, (err, row) => {
                 if (!err) {
@@ -18,8 +17,8 @@ class CategoriesService {
         });
     }
 
-    async readByID(id) { 
-        const query = 'SELECT * FROM categories WHERE idcategorie = ?';
+    async readByID(id) {
+        const query = 'SELECT * FROM areas WHERE idarea = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [id], (err, row) => {
                 if (!err) {
@@ -31,8 +30,8 @@ class CategoriesService {
         });
     }
 
-    readByState(state) {
-        const query = 'SELECT * FROM categories WHERE enabled = ?'
+    async readByState(state) {
+        const query = 'SELECT * FROM areas WHERE enabled = ?'
         return new Promise((resolve, reject) => {
             db.query(query, [state], (err, row) => {
                 if (!err) {
@@ -44,26 +43,13 @@ class CategoriesService {
         });
     }
 
-    readByDenomination(data) {
-        const query = 'SELECT * FROM categories WHERE denomination LIKE ?'
+    async create(data) {
+        const query = 'INSERT INTO areas (detail) VALUES (?)';
+        const detail = data.detail;
         return new Promise((resolve, reject) => {
-            db.query(query, ['%' + data.denomination + '%'], (err, row) => {
+            db.query(query, [detail], (err, result, row) => {
                 if (!err) {
-                    resolve(row);
-                } else {
-                    reject(boom.badRequest(err.sqlMessage));
-                }
-            });
-        });
-    }
-
-    async create(data) { 
-        const query = 'INSERT INTO categories (denomination) VALUES (?)';
-        const denomination = data.denomination;
-        return new Promise((resolve, reject) => {
-            db.query(query, [denomination], (err, result, row) => {
-                if (!err) {
-                    resolve(`categorie id ${result.insertId}`);
+                    resolve(`area id ${result.insertId}`);
                 } else {
                     reject(boom.badRequest(err.sqlMessage));
                 }
@@ -71,12 +57,12 @@ class CategoriesService {
         });
     }
 
-    async update(id, updates) { 
+    async update(id, updates) {
         if(updates.created) {
             updates.created = updates.created.split('.')[0];
         }
         updates.updated = new Date();
-        const query = 'UPDATE categories SET ? WHERE idcategorie = ?';
+        const query = 'UPDATE areas SET ? WHERE idarea = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [updates, id], (err, row) => {
                 if (!err) {
@@ -88,8 +74,8 @@ class CategoriesService {
         });
     }
 
-    async delete(id) { 
-        const query = 'DELETE FROM categories WHERE idcategorie = ?';
+    async delete(id) {
+        const query = 'DELETE FROM areas WHERE idarea = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [id], (err, row, fields) => {
                 if (!err) {
@@ -100,7 +86,6 @@ class CategoriesService {
             });
         });
     }
-
 }
 
-module.exports = CategoriesService;
+module.exports = AreasService;
