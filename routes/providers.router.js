@@ -52,6 +52,20 @@ router.get('/state/:enabled',
     }
 );
 
+router.post('/name/',
+    passport.authenticate('jwt', { session: false }),
+    rolesChek(1),
+    async (req, res, next) => {
+        try {
+            const name = req.body;
+            const providers = await service.readByName(name);
+            res.status(200).json(providers);
+        } catch (error) {
+            next(error)
+        }
+    }
+);
+
 router.post('/',
     passport.authenticate('jwt', { session: false }),
     validatorHandler(createProviderSchema, 'body'),

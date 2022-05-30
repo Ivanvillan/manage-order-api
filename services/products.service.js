@@ -43,6 +43,32 @@ class ProductsService {
         });
     }
 
+    async readByCategorie(id) { 
+        const query = 'SELECT * FROM products WHERE idcategorie = ?'
+        return new Promise((resolve, reject) => {
+            db.query(query, [id], (err, row) => {
+                if (!err) {
+                    resolve(row);
+                } else {
+                    reject(boom.badRequest(err.sqlMessage));
+                }
+            });
+        });
+    }
+
+    async readByDescription(data) { 
+        const query = 'SELECT * FROM products WHERE description LIKE ?'
+        return new Promise((resolve, reject) => {
+            db.query(query, ['%' + data.description + '%'], (err, row) => {
+                if (!err) {
+                    resolve(row);
+                } else {
+                    reject(boom.badRequest(err.sqlMessage));
+                }
+            });
+        });
+    }
+
     async create(data) { 
         const query = 'INSERT INTO products (idcategorie, description, stock, last_updated) VALUES (?, ?, ?, ?)';
         const idcategorie = data.idcategorie;

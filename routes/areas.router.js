@@ -52,6 +52,20 @@ router.get('/state/:enabled',
     }
 );
 
+router.post('/detail/',
+    passport.authenticate('jwt', { session: false }),
+    rolesChek(1),
+    async (req, res, next) => {
+        try {
+            const detail = req.body;
+            const areas = await service.readByDetail(detail);
+            res.status(200).json(areas);
+        } catch (error) {
+            next(error)
+        }
+    }
+);
+
 router.post('/',
     passport.authenticate('jwt', { session: false }),
     validatorHandler(createAreaSchema, 'body'),
