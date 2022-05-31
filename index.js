@@ -8,7 +8,7 @@ const cors = require('cors');
 const app = express();
 const port = config.port;
 
-const whitelist = ['http://localhost:4200', 'appweb.gisi.com.ar', 'http://190.228.175.35:3000', 'http://192.168.248.131:3000'];
+const whitelist = ['http://localhost:4200', 'appweb.gisi.com.ar'];
 const options = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin) || !origin) {
