@@ -9,18 +9,18 @@ const app = express();
 const port = config.port;
 app.use(express.static(process.cwd()+"/dist/"))
 
-const whitelist = ['http://localhost:4200', 'http://190.228.175.35', 'http://192.168.248.131',
-                    'appweb.gisi.com.ar', '192.168.248.131', '190.228.175.35'];
-const options = {
-  origin: (origin, callback) => {
-    if (whitelist.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('no permitido'));
-    }
-  }
-}
-app.use(cors(options));
+// const whitelist = ['http://localhost:4200', 'http://190.228.175.35', 'http://192.168.248.131',
+//                     'appweb.gisi.com.ar', '192.168.248.131', '190.228.175.35'];
+// const options = {
+//   origin: (origin, callback) => {
+//     if (whitelist.includes(origin) || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('no permitido'));
+//     }
+//   }
+// }
+app.use(cors());
 
 require('./utils/');
 
