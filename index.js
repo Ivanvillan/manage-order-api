@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const app = express();
 const port = config.port;
+app.use(express.static(process.cwd()+"/dist/"))
 
 const whitelist = ['http://localhost:4200', 'appweb.gisi.com.ar'];
 const options = {
@@ -23,8 +24,6 @@ app.use(cors(options));
 require('./utils/');
 
 app.use(express.json());
-
-app.use(express.static(process.cwd()+"/dist/"))
 
 app.use(passport.initialize());
 
