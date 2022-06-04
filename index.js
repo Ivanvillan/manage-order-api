@@ -9,7 +9,7 @@ const app = express();
 const port = config.port;
 app.use(express.static(process.cwd()+"/dist/"))
 
-const whitelist = ['http://localhost:4200', 'appweb.gisi.com.ar'];
+const whitelist = ['http://localhost:4200', 'appweb.gisi.com.ar', 'http://190.228.175.35'];
 const options = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin) || !origin) {
