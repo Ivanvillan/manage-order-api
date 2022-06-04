@@ -24,7 +24,7 @@ require('./utils/');
 
 app.use(express.json());
 
-app.use(express.static(process.cwd()+"/var/www/appweb.gisi.com.ar/html/front/dist/frontend/"))
+app.use(express.static(process.cwd()+"/dist/"))
 
 app.use(passport.initialize());
 
@@ -33,7 +33,7 @@ apiRouter(app);
 app.use(boomErrorHandler)
 
 app.get('/', (req,res) => {
-  res.sendFile(process.cwd()+"/var/www/appweb.gisi.com.ar/html/front/dist/frontend/index.html")
+  res.sendFile(process.cwd()+"/dist/index.html")
 });
 
 app.listen(port, () => {
