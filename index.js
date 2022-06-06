@@ -20,7 +20,7 @@ const port = config.port;
 //     }
 //   }
 // }
-app.use(cors());
+app.use(cors({ origin:true, preflightContinue: true }));
 
 require('./utils/');
 
