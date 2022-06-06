@@ -7,7 +7,7 @@ const cors = require('cors');
 
 const app = express();
 const port = config.port;
-app.use(express.static(process.cwd()+"/dist/"))
+// app.use(express.static(process.cwd()+"/dist/"))
 
 // const whitelist = ['http://localhost:4200', 'http://190.228.175.35', 'http://192.168.248.131',
 //                     'appweb.gisi.com.ar', '192.168.248.131', '190.228.175.35'];
@@ -32,9 +32,9 @@ apiRouter(app);
 
 app.use(boomErrorHandler)
 
-app.get('/', (req,res) => {
-  res.sendFile(process.cwd()+"/dist/index.html")
-});
+// app.get('/', (req,res) => {
+//   res.sendFile(process.cwd()+"/dist/index.html")
+// });
 
 app.listen(port, () => {
     console.log('Server up in port', port);
