@@ -5,7 +5,7 @@ class ProductsService {
     constructor() { }
 
     async read() {
-        const query = 'SELECT * FROM products';
+        const query = 'SELECT * FROM products INNER JOIN categories ON products.idcategorie = categories.idcategorie';
         return new Promise((resolve, reject) => {
             db.query(query, (err, row) => {
                 if (!err) {
