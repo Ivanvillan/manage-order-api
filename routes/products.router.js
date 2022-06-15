@@ -52,6 +52,34 @@ router.get('/state/:enabled',
     }
 );
 
+router.get('/categorie/:idcategorie',
+    passport.authenticate('jwt', { session: false }),
+    rolesChek(1),
+    async (req, res, next) => {
+        try {
+            const idcategorie = req.params.idcategorie;
+            const products = await service.readByCategorie(idcategorie);
+            res.status(200).json(products);
+        } catch (error) {
+            next(error)
+        }
+    }
+);
+
+router.post('/description/',
+    passport.authenticate('jwt', { session: false }),
+    rolesChek(1),
+    async (req, res, next) => {
+        try {
+            const description = req.body;
+            const products = await service.readByDescription(description);
+            res.status(200).json(products);
+        } catch (error) {
+            next(error)
+        }
+    }
+);
+
 router.post('/',
     passport.authenticate('jwt', { session: false }),
     validatorHandler(createProductSchema, 'body'),

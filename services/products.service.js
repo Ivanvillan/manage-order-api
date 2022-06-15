@@ -5,7 +5,7 @@ class ProductsService {
     constructor() { }
 
     async read() {
-        const query = 'SELECT * FROM products';
+        const query = 'SELECT * FROM products INNER JOIN categories ON products.idcategorie = categories.idcategorie';
         return new Promise((resolve, reject) => {
             db.query(query, (err, row) => {
                 if (!err) {
@@ -34,6 +34,32 @@ class ProductsService {
         const query = 'SELECT * FROM products WHERE enabled = ?'
         return new Promise((resolve, reject) => {
             db.query(query, [state], (err, row) => {
+                if (!err) {
+                    resolve(row);
+                } else {
+                    reject(boom.badRequest(err.sqlMessage));
+                }
+            });
+        });
+    }
+
+    async readByCategorie(id) { 
+        const query = 'SELECT * FROM products WHERE idcategorie = ?'
+        return new Promise((resolve, reject) => {
+            db.query(query, [id], (err, row) => {
+                if (!err) {
+                    resolve(row);
+                } else {
+                    reject(boom.badRequest(err.sqlMessage));
+                }
+            });
+        });
+    }
+
+    async readByDescription(data) { 
+        const query = 'SELECT * FROM products WHERE description LIKE ?'
+        return new Promise((resolve, reject) => {
+            db.query(query, ['%' + data.description + '%'], (err, row) => {
                 if (!err) {
                     resolve(row);
                 } else {

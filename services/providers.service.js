@@ -44,6 +44,19 @@ class ProvidersService {
         });
     }
 
+    async readByName(data) { 
+        const query = 'SELECT * FROM providers WHERE business_name LIKE ?'
+        return new Promise((resolve, reject) => {
+            db.query(query, ['%' + data.business_name + '%'], (err, row) => {
+                if (!err) {
+                    resolve(row);
+                } else {
+                    reject(boom.badRequest(err.sqlMessage));
+                }
+            });
+        });
+    }
+
     async create(data) { 
         const query = 'INSERT INTO providers (business_name, phone, email, additional_information) VALUES (?, ?, ?, ?)';
         const business_name = data.business_name;

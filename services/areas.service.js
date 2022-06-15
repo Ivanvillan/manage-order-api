@@ -43,6 +43,19 @@ class AreasService {
         });
     }
 
+    async readByDetail(data) { 
+        const query = 'SELECT * FROM areas WHERE detail LIKE ?'
+        return new Promise((resolve, reject) => {
+            db.query(query, ['%' + data.detail + '%'], (err, row) => {
+                if (!err) {
+                    resolve(row);
+                } else {
+                    reject(boom.badRequest(err.sqlMessage));
+                }
+            });
+        });
+    }
+
     async create(data) {
         const query = 'INSERT INTO areas (detail) VALUES (?)';
         const detail = data.detail;
