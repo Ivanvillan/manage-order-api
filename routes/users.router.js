@@ -76,8 +76,6 @@ router.post('/username/',
     });
 
 router.post('/',
-    passport.authenticate('jwt', { session: false }),
-    rolesChek(1),
     validatorHandler(createUserSchema, 'body'),
     async (req, res, next) => {
         try {
