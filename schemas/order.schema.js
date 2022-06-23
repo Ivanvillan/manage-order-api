@@ -8,6 +8,7 @@ const agreed_delivery_date = Joi.date();
 const state = Joi.number().integer();
 const canceled = Joi.number().integer();
 const iduser = Joi.number().integer();
+const observations = Joi.string().min(0).max(255);
 
 const idorder = Joi.number().integer().id();
 const idproduct = Joi.number().integer().id();
@@ -26,6 +27,7 @@ const createOrderSchema = Joi.object({
     state: state.required(),
     canceled: canceled.required(),
     iduser: iduser.required(),
+    observations: observations.required()
 });
 
 const createOrderDetailSchema = Joi.object({

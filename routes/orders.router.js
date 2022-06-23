@@ -56,7 +56,8 @@ router.get('/state/:state',
     async (req, res, next) => {
         try {
             const state = req.params.state;
-            const orders = await service.readByState(state);
+            const query = 'SELECT * FROM orders WHERE state = ?';
+            const orders = await service.readByState(state, query);
             res.status(200).json(orders);
         } catch (error) {
             next(error)
@@ -64,13 +65,14 @@ router.get('/state/:state',
     }
 );
 
-router.get('/state/:canceled',
+router.get('/canceled/:canceled',
     passport.authenticate('jwt', { session: false }),
     rolesChek(1),
     async (req, res, next) => {
         try {
             const canceled = req.params.canceled;
-            const orders = await service.readByState(canceled);
+            const query = 'SELECT * FROM orders WHERE canceled = ?';
+            const orders = await service.readByState(canceled, query);
             res.status(200).json(orders);
         } catch (error) {
             next(error)
@@ -78,13 +80,14 @@ router.get('/state/:canceled',
     }
 );
 
-router.get('/state/:finished',
+router.get('/finished/:finished',
     passport.authenticate('jwt', { session: false }),
     rolesChek(1),
     async (req, res, next) => {
         try {
             const finished = req.params.finished;
-            const orders = await service.readByState(finished);
+            const query = 'SELECT * FROM orders WHERE finished = ?';
+            const orders = await service.readByState(finished, query);
             res.status(200).json(orders);
         } catch (error) {
             next(error)
@@ -137,11 +140,11 @@ router.patch('/:idorder',
     }
 );
 
-router.patch('/detail/:idorder',
+router.patch('/detail/:iddetail',
     passport.authenticate('jwt', { session: false }),
     async (req, res, next) => {
         try {
-            const id = req.params.idorder;
+            const id = req.params.iddetail;
             const body = req.body;
             const orderDetail = await service.updateOrderDetail(id, body);
             res.status(201).json(orderDetail);

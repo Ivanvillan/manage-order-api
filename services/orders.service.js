@@ -5,7 +5,7 @@ class OrdersService {
     constructor() { }
 
     async read() {
-        const query = 'SELECT * FROM orders';
+        const query = 'SELECT * FROM orders INNER JOIN areas ON orders.idarea = areas.idarea INNER JOIN users ON orders.iduser = users.iduser';
         return new Promise((resolve, reject) => {
             db.query(query, (err, row) => {
                 if (!err) {
@@ -30,19 +30,7 @@ class OrdersService {
         });
     }
 
-    async readByState(state, finished, canceled) { 
-        if(state) {
-            const data = state;
-            const query = 'SELECT * FROM orders WHERE state = ?';
-        }
-        if(finished) {
-            const data = finished;
-            const query = 'SELECT * FROM orders WHERE finished = ?'
-        }
-        if(canceled){
-            const data = canceled;
-            const query = 'SELECT * FROM orders WHERE canceled = ?'
-        }
+    async readByState(data, query) { 
         return new Promise((resolve, reject) => {
             db.query(query, [data], (err, row) => {
                 if (!err) {
