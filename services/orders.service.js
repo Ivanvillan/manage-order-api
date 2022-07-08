@@ -43,7 +43,7 @@ class OrdersService {
     }
 
     async readOrderDetailByID(id) { 
-        const query = 'SELECT * FROM orders_details WHERE idorder = ?';
+        const query = 'SELECT * FROM orders_details INNER JOIN products ON orders_details.idproduct = products.idproduct WHERE idorder = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [id], (err, row) => {
                 if (!err) {
@@ -93,6 +93,9 @@ class OrdersService {
     }
 
     async update(id, updates) { 
+        if(updates.generate) {
+            updates.generate = updates.generate.split('.')[0];
+        }
         const query = 'UPDATE orders SET ? WHERE idorder = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [updates, id], (err, row) => {
