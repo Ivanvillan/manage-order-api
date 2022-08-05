@@ -125,14 +125,16 @@ router.post('/detail',
     }
 );
 
-router.patch('/:idorder',
+router.patch('/:idorder/',
     passport.authenticate('jwt', { session: false }),
     async (req, res, next) => {
         try {
             const id = req.params.idorder;
             const body = req.body;
+            const emailData = JSON.parse(req.query.email);
+            const email = await service.export(emailData);
             const order = await service.update(id, body);
-            res.status(201).json(order);
+            res.status(201).json({email, order});
         } catch (error) {
             next(error);
         }

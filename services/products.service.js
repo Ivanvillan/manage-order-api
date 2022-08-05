@@ -5,7 +5,7 @@ class ProductsService {
     constructor() { }
 
     async read() {
-        const query = 'SELECT * FROM products INNER JOIN categories ON products.idcategorie = categories.idcategorie';
+        const query = 'SELECT products.*, categories.denomination FROM products INNER JOIN categories ON products.idcategorie = categories.idcategorie';
         return new Promise((resolve, reject) => {
             db.query(query, (err, row) => {
                 if (!err) {
@@ -90,7 +90,9 @@ class ProductsService {
         if(updates.created) {
             updates.created = updates.created.split('.')[0];
         }
-        updates.last_updated = new Date();
+        if(updates.last_updated) {
+            updates.last_updated = updates.last_updated.split('.')[0];
+        }
         const query = 'UPDATE products SET ? WHERE idproduct = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [updates, id], (err, row) => {

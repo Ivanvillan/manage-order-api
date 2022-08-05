@@ -6,7 +6,7 @@ const surname = Joi.string().min(3).max(50);
 const role = Joi.number();
 const phone = Joi.string().max(20);
 const email = Joi.string().max(50);
-const password = Joi.string().min(8).max(100);
+const password = Joi.string().min(6).max(100);
 
 const readUserSchema = Joi.object({
     iduser: iduser.required()

@@ -8,6 +8,7 @@ const agreed_delivery_date = Joi.date();
 const state = Joi.number().integer();
 const canceled = Joi.number().integer();
 const iduser = Joi.number().integer();
+const email = Joi.string();
 const observations = Joi.string().min(0).max(255);
 
 const idorder = Joi.number().integer().id();
@@ -17,6 +18,7 @@ const original_quantity = Joi.number().integer();
 const real_quantity = Joi.number().integer();
 const excluded = Joi.number().integer();
 const isnew = Joi.number().integer();
+const lastProduct = Joi.boolean();
 
 const createOrderSchema = Joi.object({
     idarea: idarea.required(),
@@ -27,7 +29,8 @@ const createOrderSchema = Joi.object({
     state: state.required(),
     canceled: canceled.required(),
     iduser: iduser.required(),
-    observations: observations.required()
+    email: email.required(),
+    observations: observations
 });
 
 const createOrderDetailSchema = Joi.object({
@@ -38,6 +41,7 @@ const createOrderDetailSchema = Joi.object({
     real_quantity: real_quantity.required(),
     excluded: excluded.required(),
     isnew: isnew.required(),
+    lastProduct: lastProduct
 });
 
 module.exports = {
