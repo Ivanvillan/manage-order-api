@@ -71,10 +71,10 @@ class AreasService {
     }
 
     async update(id, updates) {
-        if(updates.created) {
-            updates.created = updates.created.split('.')[0];
+        if(updates.created_at) {
+            updates.created_at = updates.created_at.split('.')[0];
         }
-        updates.updated = new Date();
+        updates.updated_at = new Date();
         const query = 'UPDATE areas SET ? WHERE idarea = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [updates, id], (err, row) => {

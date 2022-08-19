@@ -70,13 +70,13 @@ class ProductsService {
     }
 
     async create(data) { 
-        const query = 'INSERT INTO products (idcategorie, description, stock, last_updated) VALUES (?, ?, ?, ?)';
+        const query = 'INSERT INTO products (idcategorie, description, stock, updated_at) VALUES (?, ?, ?, ?)';
         const idcategorie = data.idcategorie;
         const description = data.description;
         const stock = data.stock;
-        const last_updated = new Date();
+        const updated_at = new Date();
         return new Promise((resolve, reject) => {
-            db.query(query, [idcategorie, description, stock, last_updated], (err, result, row) => {
+            db.query(query, [idcategorie, description, stock, updated_at], (err, result, row) => {
                 if (!err) {
                     resolve(`product id ${result.insertId}`);
                 } else {
@@ -87,11 +87,11 @@ class ProductsService {
     }
 
     async update(id, updates) { 
-        if(updates.created) {
-            updates.created = updates.created.split('.')[0];
+        if(updates.created_at) {
+            updates.created_at = updates.created_at.split('.')[0];
         }
-        if(updates.last_updated) {
-            updates.last_updated = updates.last_updated.split('.')[0];
+        if(updates.updated_at) {
+            updates.updated_at = updates.updated_at.split('.')[0];
         }
         const query = 'UPDATE products SET ? WHERE idproduct = ?';
         return new Promise((resolve, reject) => {

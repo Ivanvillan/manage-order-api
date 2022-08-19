@@ -1,9 +1,6 @@
 const db = require('./../lib/database');
 const boom = require('@hapi/boom');
 const nodemailer = require('nodemailer');
-const exceljs = require('exceljs');
-const { unlink } = require('node:fs/promises');
-
 
 class OrdersService {
 
@@ -60,6 +57,19 @@ class OrdersService {
         });
     }
 
+    async readOrderDetailByInclude(id) {
+        const query = 'SELECT * FROM orders_details INNER JOIN products ON orders_details.idproduct = products.idproduct INNER JOIN categories ON products.idcategorie = categories.idcategorie WHERE idorder = ? AND orders_details.excluded = 0';
+        return new Promise((resolve, reject) => {
+            db.query(query, [id], (err, row) => {
+                if (!err) {
+                    resolve(row);
+                } else {
+                    reject(boom.badRequest(err.sqlMessage));
+                }
+            });
+        });
+    }
+
     async create(data) {
         const query = `INSERT INTO orders 
         (idarea, generate, reception_date, work_start_date, agreed_delivery_date, 
@@ -73,10 +83,10 @@ class OrdersService {
                 data.validated_user, data.validated_date], (err, result, row) => {
                     if (!err) {
                         resolve(result.insertId);
-                        const link = `http://localhost:4200/orders/orders-update`;
+                        const link = `http://localhost:4200/orders/orders-list`;
                         const mail = {
-                            from: data.email,
-                            to: 'ivanvillan54@gmail.com',
+                            from: 'app.gisisrl@gmail.com',
+                            to: 'nicolasrosalez@gisi.com.ar',
                             subject: 'Nota de pedido generada',
                             html: `<h3> Orden N° ${result.insertId} => Generada por el usuario ${data.email}</h3>
                                     <p>A la espera de ser aprobada</p>
@@ -87,8 +97,8 @@ class OrdersService {
                             secure: true,
                             port: 465,
                             auth: {
-                                user: 'ivanvillan54@gmail.com',
-                                pass: 'ugatswudzcuslocw'
+                                user: 'app.gisisrl@gmail.com',
+                                pass: 'wfdrjyawcgphzzqi'
                             }
                         });
                         transporter.sendMail(mail);
@@ -135,33 +145,6 @@ class OrdersService {
             db.query(query, [data, id], (err, row) => {
                 if (!err) {
                     resolve(row);
-                    if (updates.state == 2) {
-                        const mail = {
-                            from: updates.email,
-                            to: 'ivanvillan54@gmail.com',
-                            attachments: [
-                                {
-                                    filename: `Nota de pedido ${id}.xlsx`,
-                                    path: './assets/docs/export.xlsx'
-                                }
-                            ],
-                            subject: 'Nota de pedido validada',
-                            html: `<h3> Orden N° ${id} => Actualizada por el usuario ${updates.email}</h3>
-                                    <p>Esta orden ha sido validada</p>
-                                    <p>Archivo adjunto generado para seguir con el proceso</p>`
-                        }
-                        const transporter = nodemailer.createTransport({
-                            host: "smtp.gmail.com",
-                            secure: true,
-                            port: 465,
-                            auth: {
-                                user: 'ivanvillan54@gmail.com',
-                                pass: 'ugatswudzcuslocw'
-                            }
-                        });
-                        transporter.sendMail(mail);
-                        return { message: 'mail sent' };
-                    }
                 } else {
                     reject(boom.badRequest(err.sqlMessage));
                 }
@@ -194,57 +177,6 @@ class OrdersService {
             });
         });
     }
-
-    async export(data) {
-        const workbook = new exceljs.Workbook();
-        const worksheet = workbook.addWorksheet('Orden');
-
-        const imageId1 = workbook.addImage({
-            filename: './assets/img/gisi-logo.png',
-            extension: 'png',
-        });
-
-        worksheet.addImage(imageId1, {
-            ext: { width: 117, height: 54 },
-        });
-        worksheet.addTable({
-            name: 'header',
-            ref: 'C1',
-            headerRow: true,
-            style: {
-                showFirstColumn: true
-            },
-            columns: [
-                { name: 'Identificador' },
-                { name: 'Fecha' },
-                { name: 'Área' },
-                { name: 'Solicitante' },
-            ],
-            rows: [
-                [, data[0]?.generate, data[0]?.detail, data[0]?.name + ' ' + data[0]?.surname]
-            ],
-        });
-        worksheet.addTable({
-            name: 'products',
-            ref: 'A4',
-            headerRow: true,
-            style: {
-                showFirstColumn: true
-            },
-            columns: [
-                { name: 'Cantidad' },
-                { name: 'Producto' },
-            ],
-            rows: []
-        });
-        const table = worksheet.getTable('products');
-        data.splice(0, 1);
-        data.forEach((val, i) => {
-            table.addRow([val.real_quantity, val.description], i)
-        });
-        table.commit();
-        await workbook.xlsx.writeFile('./assets/docs/export.xlsx');
-    };
 }
 
 

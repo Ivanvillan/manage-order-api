@@ -58,13 +58,13 @@ class ProvidersService {
     }
 
     async create(data) { 
-        const query = 'INSERT INTO providers (business_name, phone, email, additional_information) VALUES (?, ?, ?, ?)';
+        const query = 'INSERT INTO providers (business_name, email, phone, additional_information) VALUES (?, ?, ?, ?)';
         const business_name = data.business_name;
-        const phone = data.phone;
         const email = data.email;
+        const phone = data.phone;
         const additional_information = data.additional_information;
         return new Promise((resolve, reject) => {
-            db.query(query, [business_name, phone, email, additional_information], (err, result, row) => {
+            db.query(query, [business_name, email, phone, additional_information], (err, result, row) => {
                 if (!err) {
                     resolve(`provider id ${result.insertId}`);
                 } else {
@@ -75,10 +75,10 @@ class ProvidersService {
     }
 
     async update(id, updates) { 
-        if(updates.created) {
-            updates.created = updates.created.split('.')[0];
+        if(updates.created_at) {
+            updates.created_at = updates.created_at.split('.')[0];
         }
-        updates.updated = new Date();
+        updates.updated_at = new Date();
         const query = 'UPDATE providers SET ? WHERE idprovider = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [updates, id], (err, row) => {

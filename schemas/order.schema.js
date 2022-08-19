@@ -18,7 +18,6 @@ const original_quantity = Joi.number().integer();
 const real_quantity = Joi.number().integer();
 const excluded = Joi.number().integer();
 const isnew = Joi.number().integer();
-const lastProduct = Joi.boolean();
 
 const createOrderSchema = Joi.object({
     idarea: idarea.required(),
@@ -41,7 +40,6 @@ const createOrderDetailSchema = Joi.object({
     real_quantity: real_quantity.required(),
     excluded: excluded.required(),
     isnew: isnew.required(),
-    lastProduct: lastProduct
 });
 
 module.exports = {

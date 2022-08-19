@@ -37,6 +37,19 @@ router.get('/detail/:idorder',
     }
 );
 
+router.get('/detail/include/:idorder',
+    passport.authenticate('jwt', { session: false }),
+    async (req, res, next) => {
+        try {
+            const id = req.params.idorder;
+            const orders = await service.readOrderDetailByInclude(id);
+            res.status(200).json(orders);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 router.get('/:idorder',
     passport.authenticate('jwt', { session: false }),
     async (req, res, next) => {
@@ -131,10 +144,8 @@ router.patch('/:idorder/',
         try {
             const id = req.params.idorder;
             const body = req.body;
-            const emailData = JSON.parse(req.query.email);
-            const email = await service.export(emailData);
             const order = await service.update(id, body);
-            res.status(201).json({email, order});
+            res.status(201).json(order);
         } catch (error) {
             next(error);
         }

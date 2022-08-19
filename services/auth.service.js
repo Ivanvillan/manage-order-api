@@ -42,7 +42,6 @@ class AuthService {
         if (!user) {
             throw boom.unauthorized();
         }
-        console.log(user[0]);
         const payload = {
             sub: user[0].iduser
         }

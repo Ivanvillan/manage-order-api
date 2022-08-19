@@ -44,8 +44,10 @@ router.post('/',
     async (req, res, next) => {
         try {
             const body = req.body;
+            const emailData = JSON.parse(req.query.email);
+            const email = await service.export(emailData);
             const shipment = await service.create(body);
-            res.status(201).json(shipment);
+            res.status(201).json({email, shipment});
         } catch (error) {
             next(error);
         }

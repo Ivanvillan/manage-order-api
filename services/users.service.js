@@ -84,7 +84,7 @@ class UsersService {
     }
 
     async create(data) {
-        const query = 'INSERT INTO users (name, surname, role, phone, email, password) VALUES (?, ?, ?, ?, ?, ?)';
+        const query = 'INSERT INTO users (name, surname, email, password, phone, role) VALUES (?, ?, ?, ?, ?, ?)';
         const name = data.name;
         const surname = data.surname;
         const role = data.role;
@@ -92,7 +92,7 @@ class UsersService {
         const email = data.email;
         const hash = await bcrypt.hash(data.password, 10);
         return new Promise((resolve, reject) => {
-            db.query(query, [name, surname, role, phone, email, hash], (err, result, row) => {
+            db.query(query, [name, surname, email, hash, phone, role], (err, result, row) => {
                 if (!err) {
                     delete data.password;
                     resolve(`user id ${result.insertId}`);
@@ -108,10 +108,10 @@ class UsersService {
             const hash = await bcrypt.hash(updates.password, 10);
             updates.password = hash;
         }
-        if(updates.created) {
-            updates.created = updates.created.split('.')[0];
+        if(updates.created_at) {
+            updates.created_at = updates.created_at.split('.')[0];
         }
-        updates.updated = new Date();
+        updates.updated_at = new Date();
         const query = 'UPDATE users SET ? WHERE iduser = ?';
         return new Promise((resolve, reject) => {
             db.query(query, [updates, id], (err, row) => {
