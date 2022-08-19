@@ -83,7 +83,7 @@ class OrdersService {
                 data.validated_user, data.validated_date], (err, result, row) => {
                     if (!err) {
                         resolve(result.insertId);
-                        const link = `http://localhost:4200/orders/orders-list`;
+                        const link = `https://appweb.gisi.com.ar/orders/orders-list`;
                         const mail = {
                             from: 'app.gisisrl@gmail.com',
                             to: 'nicolasrosalez@gisi.com.ar',
